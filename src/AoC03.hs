@@ -54,7 +54,7 @@ testLines =
 
 test = linesToInput testLines
 
-file = "../data/input-03.txt"
+file = "../data/AoCInput3"
 
 printL :: Show a => [a] -> IO ()
 printL l = do

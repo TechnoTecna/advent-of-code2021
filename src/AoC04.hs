@@ -88,7 +88,7 @@ testLines =
 testDraw = linesToDraw testLines
 testBoards = linesToBoards testLines
 
-file = "../data/input-04.txt"
+file = "../data/AoCInput4"
 
 testBoard1 = testBoards !! 0
 testBoard2 = testBoards !! 1

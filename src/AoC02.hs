@@ -47,7 +47,7 @@ testLines =
 
 test = linesToInput testLines
 
-file = "../data/input-02.txt"
+file = "../data/AoCInput2.txt"
 
 res1 = 1882980
 res2 = 1971232560
