@@ -27,6 +27,19 @@ You can now run the program with stack as follow:
 $ cabal run aoc21 
 ```
 
+There are a few option:
+
+``` bash
+# Check inputs from a different directory
+cabal run aoc21 -- -d <dir>
+
+# Check only day 4, 5 and 6
+cabal run aoc21 -- 4 5 6
+
+# Check solution 1 with a specific input file
+cabal run aco21 -- -f <file> 1
+```
+
 If you want you can also install the program on your machine with:
 
 ```
