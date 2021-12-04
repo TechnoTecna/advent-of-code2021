@@ -40,6 +40,8 @@ cabal run aoc21 -- 4 5 6
 cabal run aco21 -- -f <file> 1
 ```
 
+## Installation
+
 If you want you can also install the program on your machine with:
 
 ```
