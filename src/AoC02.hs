@@ -3,6 +3,7 @@ module AoC02
   where
 
 import Data.Bifunctor (second)
+import Data.List (intercalate) -- for tests
 
 
 -- Part 1
@@ -24,19 +25,26 @@ f2 = uncurry (*)
      . map toMove
 
 -- Main
-linesToInput :: [String] -> [(String, Int)]
-linesToInput = map (second (read . tail) . break (==' '))
+rawToInput :: String -> [(String, Int)]
+rawToInput = map (second (read . tail) . break (==' ')) . lines
 
-solve02 :: FilePath -> IO (Int, Int)
-solve02 fp = do
-  raw <- readFile fp
-  let input = linesToInput $ lines raw
-  return (f1 input, f2 input)
+solve02 :: String -> (Int, Int)
+solve02 raw = (f1 input, f2 input)
+  where input = rawToInput raw
 
 
 
 -- Tests
-testLines =
+run :: IO (Int, Int)
+run = do
+  raw <- readFile "data/AoCInput2"
+  return $ solve02 raw
+
+test :: (Int, Int)
+test = solve02 rawTest
+
+linesTest :: [String]
+linesTest =
   [ "forward 5"
   , "down 5"
   , "forward 8"
@@ -45,9 +53,13 @@ testLines =
   , "forward 2"
   ]
 
-test = linesToInput testLines
+rawTest :: String
+rawTest = intercalate "\n" linesTest
 
-file = "../data/AoCInput2"
+inputTest :: [(String, Int)]
+inputTest = rawToInput rawTest
 
+res1 :: Int
 res1 = 1882980
+res2 :: Int
 res2 = 1971232560

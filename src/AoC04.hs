@@ -3,6 +3,7 @@ module AoC04
   where
 
 import Data.List (isSubsequenceOf, sort, transpose, (\\), find)
+import Data.List (intercalate) -- for test
 import Data.Maybe (fromJust)
 
 
@@ -46,24 +47,31 @@ splitWhen p s = case dropWhile p s of
                   t  -> w : splitWhen p t2
                     where (w, t2) = break p t
 
-linesToDraw :: [String] -> [Int]
-linesToDraw = map read . splitWhen (== ',') . head
+rawToDraw :: String -> [Int]
+rawToDraw = map read . splitWhen (== ',') . head . lines
 
-linesToBoards :: [String] -> [[[Int]]]
-linesToBoards = map (map (map read . words)) . splitWhen (==""). drop 2
+rawToBoards :: String -> [[[Int]]]
+rawToBoards = map (map (map read . words)) . splitWhen (==""). drop 2 . lines
 
-solve04 :: FilePath -> IO (Int, Int)
-solve04 fp = do
-  raw <- readFile fp
-  let inLines = lines raw
-  let draw = linesToDraw inLines
-  let boards =  linesToBoards inLines
-  return (f1 draw boards, f2 draw boards)
+solve04 :: String -> (Int, Int)
+solve04 raw = (f1 draw boards, f2 draw boards)
+  where draw = rawToDraw raw
+        boards = rawToBoards raw
+
 
 
 
 -- Tests
-testLines =
+run :: IO (Int, Int)
+run = do
+  raw <- readFile "data/AoCInput4"
+  return $ solve04 raw
+
+test :: (Int, Int)
+test = solve04 rawTest
+
+linesTest :: [String]
+linesTest =
   [ "7,4,9,5,11,17,23,2,0,14,21,24,10,16,13,6,15,25,12,22,18,20,8,19,3,26,1"
   , ""
   , "22 13 17 11  0"
@@ -85,14 +93,20 @@ testLines =
   , " 2  0 12  3  7"
   ]
 
-testDraw = linesToDraw testLines
-testBoards = linesToBoards testLines
+rawTest :: String
+rawTest = intercalate "\n" linesTest
 
-file = "../data/AoCInput4"
+drawTest = rawToDraw rawTest
+boardsTest = rawToBoards rawTest
 
-testBoard1 = testBoards !! 0
-testBoard2 = testBoards !! 1
-testBoard3 = testBoards !! 2
+board1Test :: [[Int]]
+board1Test = boardsTest !! 0
+board2Test :: [[Int]]
+board2Test = boardsTest !! 1
+board3Test :: [[Int]]
+board3Test = boardsTest !! 2
 
+res1 :: Int
 res1 = 6592
+res2 :: Int
 res2 = 31755

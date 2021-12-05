@@ -24,10 +24,13 @@ solve01 raw = (f1 input, f2 input)
 
 
 -- Tests
-test :: IO (Int, Int)
-test = do
+run :: IO (Int, Int)
+run = do
   raw <- readFile "data/AoCInput1"
   return $ solve01 raw
+
+test :: (Int, Int)
+test = solve01 rawTest
 
 linesTest :: [String]
 linesTest =

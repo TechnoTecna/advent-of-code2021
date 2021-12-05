@@ -3,6 +3,7 @@ module AoC03
   where
 
 import Data.Char (digitToInt)
+import Data.List (intercalate) -- for test
 
 
 -- Part1
@@ -25,19 +26,26 @@ f2 :: [[Bool]] -> Int
 f2 l = binToInt (recF (head . gam) l) * binToInt (recF (not . head . gam) l)
 
 -- Main
-linesToInput :: [String] -> [[Bool]]
-linesToInput = map (map ((==) 1 . digitToInt))
+rawToInput :: String -> [[Bool]]
+rawToInput = map (map ((==) 1 . digitToInt)) . lines
 
-solve03 :: FilePath -> IO (Int, Int)
-solve03 fp = do
-  raw <- readFile fp
-  let input = linesToInput $ lines raw
-  return (f1 input, f2 input)
+solve03 :: String -> (Int, Int)
+solve03 raw = (f1 input, f2 input)
+  where input = rawToInput raw
 
 
 
 -- Tests
-testLines =
+run :: IO (Int, Int)
+run = do
+  raw <- readFile "data/AoCInput3"
+  return $ solve03 raw
+
+test :: (Int, Int)
+test = solve03 rawTest
+
+linesTest :: [String]
+linesTest =
   [ "00100"
   , "11110"
   , "10110"
@@ -52,9 +60,11 @@ testLines =
   , "01010"
   ]
 
-test = linesToInput testLines
+rawTest :: String
+rawTest = intercalate "\n" linesTest
 
-file = "../data/AoCInput3"
+inputTest :: [[Bool]]
+inputTest = rawToInput rawTest
 
 printL :: Show a => [a] -> IO ()
 printL l = do
@@ -62,5 +72,7 @@ printL l = do
   let res = foldr1 ((++) . flip (++) "\n") strLn
   putStrLn res
 
+res1 :: Int
 res1 = 3374136
+res2 :: Int
 res2 = 4432698

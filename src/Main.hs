@@ -20,7 +20,7 @@ data Result = SomeR  [(Int, (Int, Int))]
 defFolder :: FilePath
 defFolder = "data"
 
-solvers :: [FilePath -> IO (Int, Int)]
+solvers :: [String -> (Int, Int)]
 solvers =
   [ solve01
   , solve02
@@ -44,25 +44,35 @@ parseReq is =
     Nothing -> Nothing
     Just is' -> Just $ Some is'
 
-solve :: Int -> FilePath -> IO (Int, Int)
+solve :: Int -> String -> (Int, Int)
 solve i = solvers !! i
 
-solveM :: [Int] -> FilePath -> IO [(Int, Int)]
-solveM is fp = zipWithM ($) solvers (map ((</>) fp . (++) "AoCInput" . show) is)
+solveM :: [Int] -> [String] -> [(Int, Int)]
+solveM = zipWith ((!!) solvers . (-1 +))
+
+getInputs :: FilePath -> [Int] -> IO [String]
+getInputs fp = mapM (readFile . (</>) fp . (++) "AoCInput" . show)
 
 process :: FilePath -> Request -> IO Result
 process _ (Dir fp r) = process fp r
 process fp All = do
-  let labels = [1..length solvers + 1]
-  sols <- solveM labels fp
+  let labels = [1..length solvers]
+  inputs <- getInputs fp labels
+  let sols = solveM labels inputs
   let labeled = zip labels sols
   return $ SomeR labeled
 process fp (Some is) = do
-  sols <- solveM is fp
-  let labeled = zip is sols
-  return $ SomeR labeled
+  if any (\x -> x > length solvers || 1 > x) is then do
+    putStrLn "ERROR: Some requested days are not implemented"
+    exitFailure
+  else do
+    inputs <- getInputs fp is
+    let sols = solveM is inputs
+    let labeled = zip is sols
+    return $ SomeR labeled
 process _ (File i fp) = do
-  sol <- solve (i-1) fp
+  input <- readFile fp
+  let sol = solve (i-1) input
   return $ FileR i fp sol
 
 printRes :: Result -> String
