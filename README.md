@@ -1,4 +1,4 @@
-# Adven of Code 2021
+# Advent of Code 2021
 
 This is a gathering of all my solutions to Advent of Code 2021
 
@@ -13,7 +13,7 @@ You can then download and build the program as follow:
 $ git clone https://github.com/TechnoTecna/advent-of-code-2021.git
 
 # Move into the directory
-$ cd adven-of-code-2021
+$ cd advent-of-code2021
 
 # Build the project with cabal
 $ cabal build
@@ -21,7 +21,7 @@ $ cabal build
 
 ## Usage
 
-You can now run the program with stack as follow:
+You can now run the program with cabal as follow:
 
 ```bash
 $ cabal run aoc21 
@@ -48,4 +48,4 @@ If you want you can also install the program on your machine with:
 $ cabal install
 ```
 
-It should then be available in your `PATH`.
+It should then be available in your `PATH`. Note that you can then pass argument normally without double dash (example: `aoc21 -d <dir> 4 1`).
