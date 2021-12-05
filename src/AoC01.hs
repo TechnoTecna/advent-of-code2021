@@ -2,6 +2,8 @@ module AoC01
   ( solve01 )
   where
 
+import Data.List (intercalate) -- for tests
+
 
 -- Part 1
 f1 :: [Int] -> Int
@@ -12,19 +14,23 @@ f2 :: [Int] -> Int
 f2 l = f1 $ map (\(a, b, c) -> a + b + c) $ zip3 l (tail l) (tail $ tail l)
 
 -- Main
-linesToInput :: [String] -> [Int]
-linesToInput = map read
+rawToInput :: String -> [Int]
+rawToInput = map read . lines
 
-solve01 :: FilePath -> IO (Int, Int)
-solve01 fp = do
-  raw <- readFile fp
-  let input = linesToInput $ lines raw
-  return (f1 input, f2 input)
+solve01 :: String -> (Int, Int)
+solve01 raw = (f1 input, f2 input)
+  where input = rawToInput raw
 
 
 
 -- Tests
-testLines =
+test :: IO (Int, Int)
+test = do
+  raw <- readFile "data/AoCInput1"
+  return $ solve01 raw
+
+linesTest :: [String]
+linesTest =
   [ "199"
   , "200"
   , "208"
@@ -37,9 +43,13 @@ testLines =
   , "263"
   ]
 
-test = linesToInput testLines
+rawTest :: String
+rawTest = intercalate "\n" linesTest
 
-file = "../data/AoCInput1"
+inputTest :: [Int]
+inputTest = rawToInput rawTest
 
+res1 :: Int
 res1 = 1832
+res2 :: Int
 res2 = 1858
