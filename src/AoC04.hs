@@ -5,6 +5,7 @@ module AoC04
 import Data.List (isSubsequenceOf, sort, transpose, (\\), find)
 import Data.List (intercalate) -- for test
 import Data.Maybe (fromJust)
+import qualified Utils as U
 
 
 -- Part1
@@ -41,17 +42,11 @@ f2 drw brds =
     where mdrw = maxDraw brds drw
 
 -- Main
-splitWhen :: (a -> Bool) -> [a] -> [[a]]
-splitWhen p s = case dropWhile p s of
-                  [] -> []
-                  t  -> w : splitWhen p t2
-                    where (w, t2) = break p t
-
 rawToDraw :: String -> [Int]
-rawToDraw = map read . splitWhen (== ',') . head . lines
+rawToDraw = map read . U.splitWhen (== ',') . head . lines
 
 rawToBoards :: String -> [[[Int]]]
-rawToBoards = map (map (map read . words)) . splitWhen (==""). drop 2 . lines
+rawToBoards = map (map (map read . words)) . U.splitWhen (==""). drop 2 . lines
 
 solve04 :: String -> (Int, Int)
 solve04 raw = (f1 draw boards, f2 draw boards)
