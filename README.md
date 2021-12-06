@@ -6,7 +6,7 @@ I do not care about speed or efficiency. I try to make those solutions at least 
 
 ## Building
 
-This package is built with [cabal](https://www.haskell.org/cabal/). You should install it on your system using your usual package manager.
+This program is built with [cabal](https://www.haskell.org/cabal/). You should install it on your system using your usual package manager.
 
 You can then download and build the program as follow:
 
