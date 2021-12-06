@@ -1,6 +1,8 @@
 # Advent of Code 2021
 
-This is a gathering of all my solutions to Advent of Code 2021
+This is a gathering of all my solutions to Advent of Code 2021 in Haskell. It is mostly to practice my Haskell a bit. I am usually slow so it should not spoil anything before 16-20 hours after reveal.
+
+I do not care about speed or efficiency. I try to make those solutions at least a little bit elegant but I wont loose sleep over it if they aren't. Only one hard rule: nothing out of `prelude` and `base` for the problems (I still use `file` in `Main.hs`)
 
 ## Building
 
