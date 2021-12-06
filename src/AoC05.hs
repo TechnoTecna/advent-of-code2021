@@ -8,15 +8,43 @@ import qualified Utils as U
 
 
 -- Part 1
-f1 :: [((Int, Int), (Int, Int))] -> Int
-f1 = undefined
+type Pos = (Int, Int)
+type Line = (Pos, Pos)
+type Grid = [[Int]]
+
+maxPos :: Pos -> Pos -> Pos
+maxPos (x1, y1) (x2, y2) = (max x1 x2, max y1 y2)
+
+setGrid :: Grid -> (Int -> Int) -> Pos -> Grid
+setGrid grd f (x, y) = take x grd
+                       ++ [take y (grd !! x)
+                           ++ [f $ grd !! x !! y]
+                           ++ drop (y + 1) (grd !! x)]
+                       ++ drop (x + 1) grd
+
+filterDiag :: [Line] -> [Line]
+filterDiag = filter (\((x1, y1), (x2, y2)) -> x1 == x2 || y1 == y2)
+
+updateGrid :: Grid -> Line -> Grid
+updateGrid grd (s, e) =
+  if s == e
+  then newGrd
+  else
+    updateGrid newGrd (U.vecSum s (bimap U.dumbNorm U.dumbNorm $ U.vecDiff e s)
+                      , e)
+  where newGrd = setGrid grd (+ 1) s
+
+f1 :: [Line] -> Int
+f1 = f2 . filterDiag
 
 -- Part 2
-f2 :: [((Int, Int), (Int, Int))] -> Int
-f2 = undefined
+f2 :: [Line] -> Int
+f2 ls = U.count (> 1) $ concat $ foldr (flip updateGrid) initG ls
+  where initG = replicate (fst mPos + 1) $ replicate (snd mPos + 1) 0
+        mPos = foldr1 maxPos $ map (uncurry maxPos) ls
 
 -- Main
-rawToInput :: String -> [((Int, Int), (Int, Int))]
+rawToInput :: String -> [Line]
 rawToInput = map ( bimap U.first2 U.first2
                  . U.first2
                  . map (map read . U.splitWhen (== ','))
@@ -55,12 +83,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [((Int, Int), (Int, Int))]
+inputTest :: [Line]
 inputTest = rawToInput rawTest
 
 res1 :: Int
--- TODO: record result of part 1
-res1 = undefined
+res1 = 7142
 res2 :: Int
--- TODO: record result of part 2
-res2 = undefined
+res2 = 20012

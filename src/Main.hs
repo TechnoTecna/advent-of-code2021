@@ -4,6 +4,7 @@ import AoC01 (solve01)
 import AoC02 (solve02)
 import AoC03 (solve03)
 import AoC04 (solve04)
+import AoC05 (solve05)
 import Control.Monad (zipWithM)
 import Data.List (intercalate)
 import System.Environment (getArgs)
@@ -26,6 +27,7 @@ solvers =
   , solve02
   , solve03
   , solve04
+  , solve05
   ]
 
 parseReq :: [String] -> Maybe Request

@@ -1,5 +1,6 @@
 module Utils
-  ( splitWhen, first2, breakOnList, splitOnList )
+  ( splitWhen, first2, breakOnList, splitOnList, vecDiff, vecSum, dumbNorm
+  , count )
   where
 
 import Data.Bifunctor (first)
@@ -27,3 +28,18 @@ splitOnList brk s@(h:t)
 
 first2 :: [a] -> (a, a)
 first2 (a:b:_) = (a, b)
+
+vecDiff :: (Int, Int) -> (Int, Int) -> (Int, Int)
+vecDiff (x1, y1) (x2, y2) = (x1 - x2, y1 - y2)
+
+vecSum :: (Int, Int) -> (Int, Int) -> (Int, Int)
+vecSum (x1, y1) (x2, y2) = (x1 + x2, y1 + y2)
+
+dumbNorm :: Int -> Int
+dumbNorm i = case compare i 0 of
+                 LT -> -1
+                 EQ -> 0
+                 GT -> 1
+
+count :: (a -> Bool) -> [a] -> Int
+count p = sum . map (fromEnum . p)
