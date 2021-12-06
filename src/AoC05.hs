@@ -11,7 +11,6 @@ import qualified Utils as U
 -- Part 1
 type Pos = (Int, Int)
 type Line = (Pos, Pos)
-type Grid = [[Int]]
 
 filterDiag :: [Line] -> [Line]
 filterDiag = filter (\((x1, y1), (x2, y2)) -> x1 == x2 || y1 == y2)
