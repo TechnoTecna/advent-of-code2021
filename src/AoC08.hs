@@ -4,7 +4,7 @@ module AoC08
 
 import Data.Bifunctor (second)
 import Data.List (intercalate) -- for test
-import Data.List (sortBy , groupBy, sort, (\\), find, nub, elemIndex)
+import Data.List (sort, (\\), find, nub, elemIndex, findIndices)
 import Data.Maybe (fromJust)
 import qualified Utils as U
 
@@ -14,17 +14,10 @@ segs :: [String]
 segs = map sort [ "abcefg", "cf", "acdeg", "acdfg", "bcdf"
                 , "abdfg", "abdefg", "acf", "abcdefg", "abcdfg" ]
 
-segNb :: [(Int, [Int])]
-segNb = map (\((i,l):t) -> (l, i : map fst t))
-        $ groupBy (\a b -> snd a == snd b)
-        $ sortBy (\a b -> snd a `compare` snd b)
-        $ zip [0..]
-        $ map length segs
-
 f1 :: [([String], [String])] -> Int
 f1 = length
      . filter ((==) 1 . length)
-     . map (fromJust . flip lookup segNb . length)
+     . map (\l -> findIndices ((==) (length l) . length) segs)
      . concatMap snd
 
 -- Part 2
