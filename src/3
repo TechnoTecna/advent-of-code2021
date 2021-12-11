@@ -1,0 +1,57 @@
+module AoC09
+  ( solve09 )
+  where
+
+import Data.List (intercalate) -- for test
+
+
+-- Part 1
+-- TODO: set f1 type
+f1 = undefined
+
+-- Part 2
+-- TODO: set f2 type
+f2 = undefined
+
+-- Main
+-- TODO: set rawToInput type
+rawToInput = undefined
+
+solve09 :: String -> (Int, Int)
+solve09 raw = (f1 input, f2 input)
+  where input = rawToInput raw
+
+
+
+-- Tests
+run :: IO (Int, Int)
+run = do
+  raw <- readFile "data/AoCInput9"
+  -- TODO: set solve name with day number
+  return $ solve09 raw
+
+test :: (Int, Int)
+test = solve09 rawTest
+
+linesTest :: [String]
+-- TODO: copy example into linesTest
+linesTest =
+  [ "2199943210"
+  , "3987894921"
+  , "9856789892"
+  , "8767896789"
+  , "9899965678"
+  ]
+
+rawTest :: String
+rawTest = intercalate "\n" linesTest
+
+-- TODO: set inputTest type
+inputTest = rawToInput rawTest
+
+res1 :: Int
+-- TODO: record result of part 1
+res1 = undefined
+res2 :: Int
+-- TODO: record result of part 2
+res2 = undefined
