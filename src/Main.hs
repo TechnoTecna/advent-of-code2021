@@ -9,6 +9,7 @@ import AoC06 (solve06)
 import AoC07 (solve07)
 import AoC08 (solve08)
 import AoC09 (solve09)
+import AoC10 (solve10)
 import Control.Monad (zipWithM)
 import Data.List (intercalate)
 import System.Environment (getArgs)
@@ -36,6 +37,7 @@ solvers =
   , solve07
   , solve08
   , solve09
+  , solve10
   ]
 
 parseReq :: [String] -> Maybe Request
@@ -86,8 +88,11 @@ process _ (File i fp) = do
   return $ FileR i fp sol
 
 printRes :: Result -> String
-printRes (SomeR l) = intercalate "\n"
-                     $ map (\(a, b) -> "day " ++ show a ++ ": " ++ show b) l
+printRes (SomeR l) =
+  intercalate "\n"
+  $ map (\(a, b) -> "day " ++ show a ++ ":" ++ (if a<10 then "  " else " ")
+                    ++ show b)
+        l
 printRes (FileR i fp r) = "day " ++ show i ++ " with " ++ show fp ++ ": "
                           ++ show r
 
