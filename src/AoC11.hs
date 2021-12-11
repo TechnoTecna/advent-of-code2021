@@ -22,14 +22,11 @@ flashMap =
   <*> (zipWith (zipWith (+)) <*> (take 10 . (:) (replicate 10 0))))
   . map flashLine
 
-nullMask :: [[Int]] -> Bool
-nullMask = all (all (0 ==))
-
 apply :: [[Int]] -> [[Int]] -> [[Int]]
 apply = zipWith (zipWith (+))
 
 toDark :: [[Int]] -> (Int, [[Int]])
-toDark g = if nullMask fs then (0, g) else first (nf +) $ toDark ng
+toDark g = if nf == 0 then (0, g) else first (nf +) $ toDark ng
     where ng = apply (flashMap fs) $ map (map (\x -> if x>9 then -101 else x)) g
           fs = flashs g
           nf = sum $ concat fs
