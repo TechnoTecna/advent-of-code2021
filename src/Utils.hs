@@ -1,6 +1,6 @@
 module Utils
   ( splitWhen, first2, breakOnList, splitOnList, vecDiff, vecSum, dumbNorm
-  , count )
+  , count , printL)
   where
 
 import Data.Bifunctor (first)
@@ -43,3 +43,9 @@ dumbNorm i = case compare i 0 of
 
 count :: (a -> Bool) -> [a] -> Int
 count p = sum . map (fromEnum . p)
+
+printL :: Show a => [a] -> IO ()
+printL l = do
+  let strLn = map show l
+  let res = foldr1 ((++) . flip (++) "\n") strLn
+  putStrLn res
