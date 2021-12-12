@@ -1,6 +1,8 @@
+{-# LANGUAGE GADTs #-}
+
 module Utils
   ( splitWhen, first2, breakOnList, splitOnList, vecDiff, vecSum, dumbNorm
-  , count , printL)
+  , count , printL, Map (..), setWith, set, get)
   where
 
 import Data.Bifunctor (first)
@@ -49,3 +51,33 @@ printL l = do
   let strLn = map show l
   let res = foldr1 ((++) . flip (++) "\n") strLn
   putStrLn res
+
+data Map k v where
+  Branch :: Ord k => k -> v -> Map k v -> Map k v -> Map k v
+  Leaf   :: Ord k =>                                 Map k v
+
+show' :: (Show k, Show v) => String -> Map k v -> String
+show' i Leaf = i ++ "Lef"
+show' i (Branch k v l r) = i ++ "Brc key:" ++ show k ++ " val:" ++ show v
+                           ++ "\n" ++ show' (i ++ "  ") l
+                           ++ "\n" ++ show' (i ++ "  ") r
+
+instance (Show k, Show v) => Show (Map k v) where
+  show = show' ""
+
+setWith :: Ord k => Map k v -> (v -> v) -> k -> v -> Map k v
+setWith Leaf f k v = Branch k v Leaf Leaf
+setWith (Branch k' v' l r) f k v = case k `compare` k' of
+                                     LT -> Branch k' v' (setWith l f k v) r
+                                     GT -> Branch k' v' l (setWith r f k v)
+                                     EQ -> Branch k (f v') l r
+
+set :: Ord k => Map k v -> k -> v -> Map k v
+set m k v = setWith m (const v) k v
+
+get :: Ord k => Map k v -> k -> Maybe v
+get Leaf _ = Nothing
+get (Branch k' v l r) k = case k `compare` k' of
+                            LT -> get l k
+                            GT -> get r k
+                            EQ -> Just v
