@@ -1,42 +1,46 @@
 -- TODO: set module name with day number
 module AoCXX
-  -- TODO: set solve function name with day number
-  ( solveXX )
+  ( solve )
   where
 
 import Data.List (intercalate) -- for test
 
+-- TODO: set result type for Part1
+type Result1 = undefined
+-- TODO: set result type for Part2
+type Result2 = undefined
+-- TODO: set input type
+type Input = undefined
+
 
 -- Part 1
--- TODO: set f1 type
+f1 :: Input -> Result1
 f1 = undefined
 
 -- Part 2
--- TODO: set f2 type
+f2 :: Input -> Result2
 f2 = undefined
 
 -- Main
--- TODO: set rawToInput type
+rawToInput :: String -> Input
 rawToInput = undefined
 
--- TODO: set solve name with day number
-solveXX :: String -> (Int, Int)
-solveXX raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+-- TODO: remove show if Result is String
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   -- TODO: set file name with current day number
   raw <- readFile "data/AoCInputXX"
-  -- TODO: set solve name with day number
-  return $ solveXX raw
+  return $ solve raw
 
-test :: (Int, Int)
--- TODO: set solve name with day number
-test = solveXX rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 -- TODO: copy example into linesTest
@@ -45,12 +49,12 @@ linesTest = []
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
--- TODO: set inputTest type
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 -- TODO: record result of part 1
 res1 = undefined
-res2 :: Int
+res2 :: Result2
 -- TODO: record result of part 2
 res2 = undefined

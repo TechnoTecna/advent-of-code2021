@@ -1,9 +1,13 @@
 module AoC03
-  ( solve03 )
+  ( solve )
   where
 
 import Data.Char (digitToInt)
 import Data.List (intercalate) -- for test
+
+type Result1 = Int
+type Result2 = Int
+type Input = [[Bool]]
 
 
 -- Part1
@@ -14,7 +18,7 @@ gam :: [[Bool]] -> [Bool]
 gam l = map (half <=) $ foldr1 (zipWith (+)) $ map (map fromEnum) l
         where half = (length l `div` 2) + (length l `mod` 2)
 
-f1 :: [[Bool]] -> Int
+f1 :: Input -> Result1
 f1 l = binToInt (gam l) * binToInt (map not $ gam l)
 
 -- Part 2
@@ -22,27 +26,27 @@ recF :: ([[Bool]] -> Bool) -> [[Bool]] -> [Bool]
 recF _ [a] = a
 recF f l   = f l : recF f (map tail $ filter ((== f l) . head) l)
 
-f2 :: [[Bool]] -> Int
+f2 :: Input -> Result2
 f2 l = binToInt (recF (head . gam) l) * binToInt (recF (not . head . gam) l)
 
 -- Main
-rawToInput :: String -> [[Bool]]
+rawToInput :: String -> Input
 rawToInput = map (map ((==) 1 . digitToInt)) . lines
 
-solve03 :: String -> (Int, Int)
-solve03 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput3"
-  return $ solve03 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve03 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -63,7 +67,7 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [[Bool]]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
 printL :: Show a => [a] -> IO ()
@@ -72,7 +76,7 @@ printL l = do
   let res = foldr1 ((++) . flip (++) "\n") strLn
   putStrLn res
 
-res1 :: Int
+res1 :: Result1
 res1 = 3374136
-res2 :: Int
+res2 :: Result2
 res2 = 4432698

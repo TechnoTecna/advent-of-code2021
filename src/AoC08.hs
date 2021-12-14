@@ -1,5 +1,5 @@
 module AoC08
-  ( solve08 )
+  ( solve )
   where
 
 import Data.Bifunctor (second)
@@ -8,13 +8,17 @@ import Data.List (sort, (\\), find, nub, elemIndex, findIndices)
 import Data.Maybe (fromJust)
 import qualified Utils as U
 
+type Result1 = Int
+type Result2 = Int
+type Input = [([String], [String])]
+
 
 -- Part 1
 segs :: [String]
 segs = map sort [ "abcefg", "cf", "acdeg", "acdfg", "bcdf"
                 , "abdfg", "abdefg", "acf", "abcdefg", "abcdfg" ]
 
-f1 :: [([String], [String])] -> Int
+f1 :: Input -> Result1
 f1 = length
      . filter ((==) 1 . length)
      . map (\l -> findIndices ((==) (length l) . length) segs)
@@ -48,7 +52,7 @@ checkAll acc [] nbs
 checkAll acc ((a, b):t) nbs =
   checkAll (acc ++ [a]) t nbs ++ checkAll (acc ++ [b]) t nbs
 
-f2 :: [([String], [String])] -> Int
+f2 :: Input -> Result2
 f2 l = sum $ map (sum . zipWith (*) [10^n | n <- [0..]] . reverse
                   . map (fromJust . flip elemIndex segs . sort)
                   . (\(dig, out) -> trans out
@@ -57,24 +61,24 @@ f2 l = sum $ map (sum . zipWith (*) [10^n | n <- [0..]] . reverse
        l
 
 -- Main
-rawToInput :: String -> [([String], [String])]
+rawToInput :: String -> Input
 rawToInput = map (U.first2 . map (U.splitWhen (== ' ')) . U.splitWhen (== '|'))
              . lines
 
-solve08 :: String -> (Int, Int)
-solve08 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput8"
-  return $ solve08 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve08 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -93,10 +97,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [([String], [String])]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 res1 = 493
-res2 :: Int
+res2 :: Result2
 res2 = 1010460

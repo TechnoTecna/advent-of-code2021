@@ -1,17 +1,18 @@
 module Main where
 
-import AoC01 (solve01)
-import AoC02 (solve02)
-import AoC03 (solve03)
-import AoC04 (solve04)
-import AoC05 (solve05)
-import AoC06 (solve06)
-import AoC07 (solve07)
-import AoC08 (solve08)
-import AoC09 (solve09)
-import AoC10 (solve10)
-import AoC11 (solve11)
-import AoC12 (solve12)
+import qualified AoC01
+import qualified AoC02
+import qualified AoC03
+import qualified AoC04
+import qualified AoC05
+import qualified AoC06
+import qualified AoC07
+import qualified AoC08
+import qualified AoC09
+import qualified AoC10
+import qualified AoC11
+import qualified AoC12
+import qualified AoC13
 import Control.Monad (zipWithM)
 import Data.List (intercalate)
 import System.Environment (getArgs)
@@ -22,26 +23,27 @@ import Text.Read (readMaybe)
 
 data Request = Dir FilePath Request | All | Some [Int] | File Int FilePath
   deriving (Show)
-data Result = SomeR  [(Int, (Int, Int))]
-            | FileR Int FilePath (Int, Int)
+data Result = SomeR  [(Int, (String, String))]
+            | FileR Int FilePath (String, String)
 
 defFolder :: FilePath
 defFolder = "data"
 
-solvers :: [String -> (Int, Int)]
+solvers :: [String -> (String, String)]
 solvers =
-  [ solve01
-  , solve02
-  , solve03
-  , solve04
-  , solve05
-  , solve06
-  , solve07
-  , solve08
-  , solve09
-  , solve10
-  , solve11
-  , solve12
+  [ AoC01.solve
+  , AoC02.solve
+  , AoC03.solve
+  , AoC04.solve
+  , AoC05.solve
+  , AoC06.solve
+  , AoC07.solve
+  , AoC08.solve
+  , AoC09.solve
+  , AoC10.solve
+  , AoC11.solve
+  , AoC12.solve
+  , AoC13.solve
   ]
 
 parseReq :: [String] -> Maybe Request
@@ -60,10 +62,10 @@ parseReq is =
     Nothing -> Nothing
     Just is' -> Just $ Some is'
 
-solve :: Int -> String -> (Int, Int)
+solve :: Int -> String -> (String, String)
 solve i = solvers !! i
 
-solveM :: [Int] -> [String] -> [(Int, Int)]
+solveM :: [Int] -> [String] -> [(String, String)]
 solveM = zipWith ((!!) solvers . (-1 +))
 
 getInputs :: FilePath -> [Int] -> IO [String]
@@ -91,14 +93,22 @@ process _ (File i fp) = do
   let sol = solve (i-1) input
   return $ FileR i fp sol
 
+showRes :: (String, String) -> String
+showRes (p1, p2) =
+  "  Part 1: " ++ head p1s ++ "\n"
+               ++ intercalate "\n" (map ("          " ++) (tail p1s)) ++
+  "  Part 2: " ++ head p2s ++ "\n"
+               ++ intercalate "\n" (map ("          " ++) (tail p2s))
+  where p1s = lines p1
+        p2s = lines p2
+
 printRes :: Result -> String
 printRes (SomeR l) =
-  intercalate "\n"
-  $ map (\(a, b) -> "day " ++ show a ++ ":" ++ (if a<10 then "  " else " ")
-                    ++ show b)
-        l
-printRes (FileR i fp r) = "day " ++ show i ++ " with " ++ show fp ++ ": "
-                          ++ show r
+  concatMap (\(a, b) -> "day " ++ show a ++ ":" ++ (if a<10 then "  " else " ")
+                        ++ "\n" ++ showRes b)
+            l
+printRes (FileR i fp r) = "day " ++ show i ++ " with " ++ show fp ++ ": \n"
+                          ++ showRes r
 
 main :: IO ()
 main = do

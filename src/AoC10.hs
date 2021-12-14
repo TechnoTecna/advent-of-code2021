@@ -1,9 +1,13 @@
 module AoC10
-  ( solve10 )
+  ( solve )
   where
 
 import Data.List (intercalate) -- for test
 import Data.List (sort)
+
+type Result1 = Int
+type Result2 = Int
+type Input = [String]
 
 
 -- Part 1
@@ -28,7 +32,7 @@ badChar acc (i:u) =
     (_,     '<') -> badChar ('>':acc) u
     (_,     c)   -> (c, acc)
 
-f1 :: [String] -> Int
+f1 :: Input -> Result1
 f1 = sum . map (score1 . fst . badChar [])
 
 -- Part 2
@@ -41,7 +45,7 @@ score2 '>' = 4
 middle :: [a] -> a
 middle l = l !! (length l `div` 2)
 
-f2 :: [String] -> Int
+f2 :: Input -> Result2
 f2 = middle
      . sort
      . map (foldl (\a b -> score2 b + (a * 5)) 0 . snd)
@@ -49,23 +53,23 @@ f2 = middle
      . map (badChar [])
 
 -- Main
-rawToInput :: String -> [String]
+rawToInput :: String -> Input
 rawToInput = lines
 
-solve10 :: String -> (Int, Int)
-solve10 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput10"
-  return $ solve10 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve10 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -84,10 +88,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [String]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 res1 = 288291
-res2 :: Int
+res2 :: Result2
 res2 = 820045242

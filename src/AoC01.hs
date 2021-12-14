@@ -1,36 +1,40 @@
 module AoC01
-  ( solve01 )
+  ( solve )
   where
 
 import Data.List (intercalate) -- for tests
 
+type Result1 = Int
+type Result2 = Int
+type Input = [Int]
+
 
 -- Part 1
-f1 :: [Int] -> Int
+f1 :: Input -> Result1
 f1 l = sum $ map fromEnum $ zipWith (<) l (tail l)
 
 -- Part 2
-f2 :: [Int] -> Int
+f2 :: Input -> Result2
 f2 l = f1 $ map (\(a, b, c) -> a + b + c) $ zip3 l (tail l) (tail $ tail l)
 
 -- Main
-rawToInput :: String -> [Int]
+rawToInput :: String -> Input
 rawToInput = map read . lines
 
-solve01 :: String -> (Int, Int)
-solve01 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput1"
-  return $ solve01 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve01 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -49,10 +53,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [Int]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 res1 = 1832
-res2 :: Int
+res2 :: Result2
 res2 = 1858

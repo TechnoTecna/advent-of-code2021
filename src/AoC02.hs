@@ -1,9 +1,13 @@
 module AoC02
-  ( solve02 )
+  ( solve )
   where
 
 import Data.Bifunctor (second)
 import Data.List (intercalate) -- for tests
+
+type Result1 = Int
+type Result2 = Int
+type Input = [(String, Int)]
 
 
 -- Part 1
@@ -12,36 +16,36 @@ toMove ('f':_, x) = (x, 0)
 toMove ('u':_, x) = (0, -x)
 toMove ('d':_, x) = (0, x)
 
-f1 :: [(String, Int)] -> Int
+f1 :: Input -> Result1
 f1 = uncurry (*)
      . foldr1 (\(a, b) (c, d) -> (a+c, b+d))
      . map toMove
 
 -- Part 2
-f2 :: [(String, Int)] -> Int
+f2 :: Input -> Result2
 f2 = uncurry (*)
      . foldl1 (\(a, b) (c, d) -> (a+c, c*d+b))
      . scanl1 (\(_, b) (c, d) -> (c, b+d))
      . map toMove
 
 -- Main
-rawToInput :: String -> [(String, Int)]
+rawToInput :: String -> Input
 rawToInput = map (second (read . tail) . break (==' ')) . lines
 
-solve02 :: String -> (Int, Int)
-solve02 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput2"
-  return $ solve02 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve02 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -56,10 +60,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [(String, Int)]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 res1 = 1882980
-res2 :: Int
+res2 :: Result2
 res2 = 1971232560

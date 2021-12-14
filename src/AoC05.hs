@@ -1,11 +1,15 @@
 module AoC05
-  ( solve05 )
+  ( solve )
   where
 
 import Data.Bifunctor (bimap)
 import Data.List (sort, group)
 import Data.List (intercalate) -- for test
 import qualified Utils as U
+
+type Result1 = Int
+type Result2 = Int
+type Input = [Line]
 
 
 -- Part 1
@@ -21,35 +25,35 @@ trace (s, e) =
   then [s]
   else s : trace (U.vecSum s (bimap U.dumbNorm U.dumbNorm $ U.vecDiff e s), e)
 
-f1 :: [Line] -> Int
+f1 :: Input -> Result1
 f1 = f2 . filterDiag
 
 -- Part 2
-f2 :: [Line] -> Int
+f2 :: Input -> Result2
 f2 = U.count ((<) 1 . length) . group . sort . concatMap trace
 
 -- Main
-rawToInput :: String -> [Line]
+rawToInput :: String -> Input
 rawToInput = map ( bimap U.first2 U.first2
                  . U.first2
                  . map (map read . U.splitWhen (== ','))
                  . U.splitOnList " -> " )
              . lines
 
-solve05 :: String -> (Int, Int)
-solve05 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput5"
-  return $ solve05 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve05 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -68,10 +72,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [Line]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 res1 = 7142
-res2 :: Int
+res2 :: Result1
 res2 = 20012

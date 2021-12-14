@@ -1,11 +1,15 @@
 module AoC04
-  ( solve04 )
+  ( solve )
   where
 
 import Data.List (isSubsequenceOf, sort, transpose, (\\), find)
 import Data.List (intercalate) -- for test
 import Data.Maybe (fromJust)
 import qualified Utils as U
+
+type Result1 = Int
+type Result2 = Int
+type Input = ([Int], [[[Int]]])
 
 
 -- Part1
@@ -27,43 +31,40 @@ minDraw brds = reverse . dropWhileInc (flip any brds . won) . reverse
 sumUnmarked :: [Int] -> [[Int]] -> Int
 sumUnmarked drw = sum . (\\ drw) . concat
 
-f1 :: [Int] -> [[[Int]]] -> Int
-f1 drw brds = last mdrw * sumUnmarked mdrw (fromJust $ find (won mdrw) brds)
+f1 :: Input -> Result1
+f1 (drw, brds) = last mdrw * sumUnmarked mdrw (fromJust $ find (won mdrw) brds)
               where mdrw = minDraw brds drw
 
 -- Part 2
 maxDraw :: [[[Int]]] -> [Int] -> [Int]
 maxDraw brds = reverse . dropWhileInc (flip all brds . won) . reverse
 
-f2 :: [Int] -> [[[Int]]] -> Int
-f2 drw brds =
+f2 :: Input -> Result2
+f2 (drw, brds) =
   last mdrw
   * sumUnmarked mdrw (fromJust $ find (not . won (tail $ reverse mdrw)) brds)
     where mdrw = maxDraw brds drw
 
 -- Main
-rawToDraw :: String -> [Int]
-rawToDraw = map read . U.splitWhen (== ',') . head . lines
+rawToInput :: String -> Input
+rawToInput i =
+  (map read $ U.splitWhen (== ',') $ head $ lines i
+  , map (map (map read . words)) $ U.splitWhen (=="") $ drop 2 $ lines i)
 
-rawToBoards :: String -> [[[Int]]]
-rawToBoards = map (map (map read . words)) . U.splitWhen (==""). drop 2 . lines
-
-solve04 :: String -> (Int, Int)
-solve04 raw = (f1 draw boards, f2 draw boards)
-  where draw = rawToDraw raw
-        boards = rawToBoards raw
-
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
+  where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput4"
-  return $ solve04 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve04 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -91,17 +92,17 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-drawTest = rawToDraw rawTest
-boardsTest = rawToBoards rawTest
+inputTest :: Input
+inputTest = rawToInput rawTest
 
 board1Test :: [[Int]]
-board1Test = boardsTest !! 0
+board1Test = snd inputTest !! 0
 board2Test :: [[Int]]
-board2Test = boardsTest !! 1
+board2Test = snd inputTest !! 1
 board3Test :: [[Int]]
-board3Test = boardsTest !! 2
+board3Test = snd inputTest !! 2
 
-res1 :: Int
+res1 :: Result1
 res1 = 6592
-res2 :: Int
+res2 :: Result2
 res2 = 31755

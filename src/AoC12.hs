@@ -1,11 +1,15 @@
 module AoC12
-  ( solve12 )
+  ( solve )
   where
 
 import Data.Char (isLower)
 import Data.List (intercalate) -- for test
 import qualified Utils as U
 import Data.Maybe (fromJust)
+
+type Result1 = Int
+type Result2 = Int
+type Input = [(String, String)]
 
 
 -- Part 1
@@ -18,7 +22,7 @@ paths m acc cur
   | isLower (head cur) && cur `elem` acc = []
   | otherwise = concatMap (paths m (cur:acc)) $ fromJust $ U.get m cur
 
-f1 :: [(String, String)] -> Int
+f1 :: Input -> Result1
 f1 eds = length $ paths (exit eds) [] "start"
 
 -- Part 2
@@ -31,27 +35,27 @@ paths2 b m acc cur
     && not b = concatMap (paths2 True m (cur:acc)) $ fromJust $ U.get m cur
   | otherwise = concatMap (paths2 b m (cur:acc)) $ fromJust $ U.get m cur
 
-f2 :: [(String, String)] -> Int
+f2 :: Input -> Result2
 f2 eds = length $ paths2 False (exit eds) [] "start"
 
 -- Main
-rawToInput :: String -> [(String, String)]
+rawToInput :: String -> Input
 rawToInput = map (U.first2 . U.splitOnList "-") . lines
 
-solve12 :: String -> (Int, Int)
-solve12 raw = (f1 input, f2 input)
+solve :: String -> (String, String)
+solve raw = (show (f1 input), show (f2 input))
   where input = rawToInput raw
 
 
 
 -- Tests
-run :: IO (Int, Int)
+run :: IO (String, String)
 run = do
   raw <- readFile "data/AoCInput12"
-  return $ solve12 raw
+  return $ solve raw
 
-test :: (Int, Int)
-test = solve12 rawTest
+test :: (String, String)
+test = solve rawTest
 
 linesTest :: [String]
 linesTest =
@@ -67,10 +71,10 @@ linesTest =
 rawTest :: String
 rawTest = intercalate "\n" linesTest
 
-inputTest :: [(String, String)]
+inputTest :: Input
 inputTest = rawToInput rawTest
 
-res1 :: Int
+res1 :: Result1
 res1 = 4659
-res2 :: Int
+res2 :: Result2
 res2 = 148962
