@@ -2,7 +2,8 @@
 
 module Utils
   ( splitWhen, first2, breakOnList, splitOnList, vecDiff, vecSum, dumbNorm
-  , count , printL, Map (..), setWith, set, get)
+  , count, printL, Map (..), setWith, setWith', set, get, mapMap, toList, keys
+  , values)
   where
 
 import Data.Bifunctor (first)
@@ -72,6 +73,13 @@ setWith (Branch k' v' l r) f k v = case k `compare` k' of
                                      GT -> Branch k' v' l (setWith r f k v)
                                      EQ -> Branch k (f v') l r
 
+setWith' :: Ord k => Map k v -> (v -> v) -> k -> Map k v
+setWith' Leaf _ _ = Leaf
+setWith' (Branch k' v l r) f k = case k `compare` k' of
+                                  LT -> Branch k' v (setWith' l f k) r
+                                  GT -> Branch k' v l (setWith' r f k)
+                                  EQ -> Branch k (f v) l r
+
 set :: Ord k => Map k v -> k -> v -> Map k v
 set m k v = setWith m (const v) k v
 
@@ -81,3 +89,17 @@ get (Branch k' v l r) k = case k `compare` k' of
                             LT -> get l k
                             GT -> get r k
                             EQ -> Just v
+
+mapMap :: Ord k => (v -> v') -> Map k v -> Map k v'
+mapMap _ Leaf = Leaf
+mapMap f (Branch k v l r) = Branch k (f v) (mapMap f l) (mapMap f r)
+
+toList :: Ord k => Map k v -> [(k, v)]
+toList Leaf = []
+toList (Branch k v l r) = (k, v) : toList l ++ toList r
+
+keys :: Ord k => Map k v -> [k]
+keys = map fst . toList
+
+values :: Ord k => Map k v -> [v]
+values = map snd . toList

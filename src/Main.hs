@@ -13,6 +13,7 @@ import qualified AoC10
 import qualified AoC11
 import qualified AoC12
 import qualified AoC13
+import qualified AoC14
 import Control.Monad (zipWithM)
 import Data.List (intercalate)
 import System.Environment (getArgs)
@@ -44,6 +45,7 @@ solvers =
   , AoC11.solve
   , AoC12.solve
   , AoC13.solve
+  , AoC14.solve
   ]
 
 parseReq :: [String] -> Maybe Request
@@ -93,22 +95,22 @@ process _ (File i fp) = do
   let sol = solve (i-1) input
   return $ FileR i fp sol
 
-showRes :: (String, String) -> String
-showRes (p1, p2) =
+printSRes :: (String, String) -> String
+printSRes (p1, p2) =
   "  Part 1: " ++ head p1s ++ "\n"
-               ++ intercalate "\n" (map ("          " ++) (tail p1s)) ++
+               ++ concatMap (\x -> "          " ++ x ++ "\n") (tail p1s) ++
   "  Part 2: " ++ head p2s ++ "\n"
-               ++ intercalate "\n" (map ("          " ++) (tail p2s))
+               ++ concatMap (\x -> "          " ++ x ++ "\n") (tail p2s)
   where p1s = lines p1
         p2s = lines p2
 
 printRes :: Result -> String
 printRes (SomeR l) =
   concatMap (\(a, b) -> "day " ++ show a ++ ":" ++ (if a<10 then "  " else " ")
-                        ++ "\n" ++ showRes b)
+                        ++ "\n" ++ printSRes b)
             l
 printRes (FileR i fp r) = "day " ++ show i ++ " with " ++ show fp ++ ": \n"
-                          ++ showRes r
+                          ++ printSRes r
 
 main :: IO ()
 main = do
